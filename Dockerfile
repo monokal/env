@@ -1,6 +1,5 @@
 #
-# docker build -t monokal/env:latest .
-# docker run -ti -v ~/.ssh:/root/.ssh monokal/env:latest
+# docker run --rm -ti -v ~/:/host/ monokal/env:latest
 #
 
 FROM ubuntu:latest
@@ -28,7 +27,8 @@ WORKDIR /tmp
 
 # Install APT packages.
 RUN apt-get update && \
-    apt-get -y install $APT_PACKAGES
+    apt-get -y install $APT_PACKAGES && \
+    mkdir /host
 
 # Install oh-my-zsh.
 RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
@@ -55,7 +55,9 @@ RUN git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.v
 WORKDIR /root
 
 # Clean-up.
-RUN rm -rf /tmp/* && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get clean && \
+    rm -rf /tmp/* /var/tmp/* && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -f /etc/ssh/ssh_host_*
 
 ENTRYPOINT $(which zsh)
