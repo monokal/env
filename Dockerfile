@@ -1,7 +1,3 @@
-#
-# docker run --rm -ti -v ${HOME}/:/host/ -v ${HOME}/.bash_history:/root/.bash_history monokal/env:latest
-#
-
 FROM ubuntu:latest
 MAINTAINER Daniel Middleton <@monokal.io>
 
