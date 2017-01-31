@@ -1,8 +1,10 @@
-FROM ubuntu:latest
+FROM ubuntu:xenial
 MAINTAINER Daniel Middleton <@monokal.io>
 
 # APT packages to install.
 ENV APT_PACKAGES \
+    apt-transport-https \
+    ca-certificates \
     git \
     ruby-dev \
     gcc \
@@ -12,7 +14,8 @@ ENV APT_PACKAGES \
     python \
     python3 \
     vim \
-    zsh
+    zsh \
+    tree
 
 # Gems to install.
 ENV GEM_PACKAGES \
@@ -23,8 +26,19 @@ WORKDIR /tmp
 
 # Install APT packages.
 RUN apt-get update && \
+    apt-get -y dist-upgrade && \
     apt-get -y install $APT_PACKAGES && \
     mkdir /host
+
+# Add Docker repo GPG keys.
+RUN apt-key adv \
+    --keyserver hkp://ha.pool.sks-keyservers.net:80 \
+    --recv-keys 58118E89F3A912897C070ADBF76221572C52609D && \
+    echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | \
+    tee /etc/apt/sources.list.d/docker.list && \
+    apt-get update && \
+    apt-get install linux-image-extra-$(uname -r) linux-image-extra-virtual docker-engine && \
+    service docker start
 
 # Install oh-my-zsh.
 RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
