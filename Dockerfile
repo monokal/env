@@ -30,16 +30,6 @@ RUN apt-get update && \
     apt-get -y install $APT_PACKAGES && \
     mkdir /host
 
-# Add Docker repo GPG keys.
-RUN apt-key adv \
-    --keyserver hkp://ha.pool.sks-keyservers.net:80 \
-    --recv-keys 58118E89F3A912897C070ADBF76221572C52609D && \
-    echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | \
-    tee /etc/apt/sources.list.d/docker.list && \
-    apt-get update && \
-    apt-get install linux-image-extra-$(uname -r) linux-image-extra-virtual docker-engine && \
-    service docker start
-
 # Install oh-my-zsh.
 RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
     cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc && \
@@ -62,7 +52,7 @@ ADD ./motd /etc/motd
 RUN git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim && \
     echo | echo | vim +PluginInstall +qall &>/dev/null
 
-WORKDIR /root
+WORKDIR /host
 
 # Clean-up.
 RUN apt-get clean && \
