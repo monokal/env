@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM ubuntu:latest
 MAINTAINER Daniel Middleton <@monokal.io>
 
 # APT packages to install.
@@ -50,14 +50,14 @@ ADD ./molokai.vim /root/.vim/colors/molokai.vim
 ADD ./motd /etc/motd
 
 RUN git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim && \
-    echo | echo | vim +PluginInstall +qall &>/dev/null
-
-WORKDIR /host
+    vim -c 'PluginInstall' -c 'qa!'
 
 # Clean-up.
 RUN apt-get clean && \
     rm -rf /tmp/* /var/tmp/* && \
     rm -rf /var/lib/apt/lists/* && \
     rm -f /etc/ssh/ssh_host_*
+
+WORKDIR /host
 
 ENTRYPOINT $(which zsh)
