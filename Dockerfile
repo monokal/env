@@ -32,7 +32,8 @@ RUN apt-get update && \
 # Some misc config.
 RUN mkdir /host && \
     git config --global user.name "monokal" && \
-    git config --global user.email "d@monokal.io"
+    git config --global user.email "d@monokal.io" && \
+    git config --global push.default simple
 
 # Install oh-my-zsh.
 RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
